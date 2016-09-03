@@ -27,14 +27,9 @@ public class SchoolDelte {
 
     static {
         conf = new Configuration();
-/*
-        conf.set("hbase.zookeeper.quorum", "192.168.1.230");
-        conf.set("hbase.cluster.distributed", "true");
-        conf.set("hbase.rootdir","hdfs://master:8020/hbase");
-        conf.set("hbase.master", "hdfs://master:60000");
-*/
+
         conf.set("hbase.zookeeper.quorum","127.0.0.1");
-       // conf.set("hbase.rootdir","hdfs://127.0.0.1:9000");
+        conf.set("hbase.rootdir","hdfs://127.0.0.1:9000");
         conf.set("hbase.master","hdfs://master:60000");
 
     }
@@ -42,13 +37,12 @@ public class SchoolDelte {
     public  void tests(String tabelName,String storeTable) throws Exception{
 
         Scan scan = new Scan();
-
+        conf.set("tablename", tabelName);
         Job job = new Job(conf,storeTable);
         job.setJarByClass(SchoolDelte.class);
         job.setReducerClass(ReduceSchool.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
-        conf.set("tablename", tabelName);
         TableMapReduceUtil.initTableMapperJob(tabelName.getBytes(), scan, MaperSchool.class, Text.class, Text.class, job);
         //FileOutputFormat.setOutputPath(job, new Path("/home/kp/12111school"));
         FileOutputFormat.setOutputPath(job, new Path("/Users/kp/KPtest/"+storeTable+".txt"));
@@ -80,20 +74,21 @@ public class SchoolDelte {
     }
 
     public static class ReduceSchool extends Reducer<Text, Text, Text, NullWritable> {
-        HTable table = null;
-        String tablename = null;
+        static HTable table = null;
+        static String tablename = null;
         @Override
         protected void setup(Context context) throws IOException, InterruptedException {
+
             tablename = context.getConfiguration().get("tablename");
             System.out.println(tablename+"--------------------");
-            table = new HTable(conf,"8111");
+            table = new HTable(conf,tablename);
 
 
         }
 
         @Override
         protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-            int count = 0;
+          /*  int count = 0;
             int numProperty = 0;
             for (Text value:values){
                 numProperty++;
@@ -116,7 +111,8 @@ public class SchoolDelte {
                 System.out.println(key.toString());
                 Delete delete = new Delete(key.toString().getBytes());
                 table.delete(delete);
-            }
+            }*/
+            System.out.println(tablename);
 
         }
     }
