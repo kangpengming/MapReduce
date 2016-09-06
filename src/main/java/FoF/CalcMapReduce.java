@@ -36,7 +36,7 @@ public class CalcMapReduce {
         }
     }
 
-    public class Map extends Mapper<Text,Text,TextPair,IntWritable>{
+    public static class Map extends Mapper<Text,Text,TextPair,IntWritable>{
 
         private  TextPair pair = new TextPair();
         private IntWritable one = new IntWritable(1);
@@ -59,7 +59,7 @@ public class CalcMapReduce {
         }
     }
 
-    public class Reduce extends Reducer<TextPair,IntWritable,TextPair,IntWritable>{
+    public static class Reduce extends Reducer<TextPair,IntWritable,TextPair,IntWritable>{
 
         private IntWritable friendsInCommon = new IntWritable();
 

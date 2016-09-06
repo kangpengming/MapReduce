@@ -11,7 +11,7 @@ import java.io.IOException;
  * Created by kp on 16/8/29.
  */
 public class SortJob {
-    public class Map extends Mapper<Text,Text,Person, Person>{
+    public static class Map extends Mapper<Text,Text,Person, Person>{
 
         private Person outputkey = new Person();
         private Person outputvalue = new Person();
@@ -28,7 +28,7 @@ public class SortJob {
             context.write(outputkey,outputvalue);
         }
     }
-    public class Reduce extends Reducer<Person,Person,Text,Text>{
+    public static class Reduce extends Reducer<Person,Person,Text,Text>{
 
         private Text name = new Text();
         private Text potentialFriends = new Text();

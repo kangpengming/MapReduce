@@ -25,12 +25,23 @@ import java.io.IOException;
  * 然后就是排序，排序会自动选取分区之后的数据，在对分区里面的数据进行分组，然后reduce去读取每个分区里面的数据。
  * */
 public class FoFdriver extends TestCase {
+    static Configuration conf = new Configuration();
+    static {
+        conf = new Configuration();
+        conf.set("hbase.zookeeper.quorum", "127.0.0.1");
+        conf.set("fs.default.name","hdfs://localhost:9000");
+        conf.set("hbase.rootdir","hdfs://master:8020/hbase");
+        conf.set("hbase.master", "hdfs://master:60000");
+    }
 
     public static void main(String args[]) throws Exception{
 
-        String inputfile = "";
-        String calcOutputDir = "";
-        String sortOutputDir = "";
+        /*String inputfile = args[0];
+        String calcOutputDir = args[1];
+        String sortOutputDir = args[2];*/
+        String inputfile = "/Users/kp/KPtest/friends.txt";
+        String calcOutputDir = "calc-output";
+        String sortOutputDir = "sort-output";
         if (runCalcJob(inputfile, calcOutputDir)) {
         runSortJob(calcOutputDir, sortOutputDir);
     }
@@ -38,9 +49,8 @@ public class FoFdriver extends TestCase {
 
     public static boolean runCalcJob(String input,String output) throws IOException,InterruptedException,ClassNotFoundException{
 
-        Configuration configuration = new Configuration();
 
-        Job job = new Job(configuration);
+        Job job = new Job(conf);
         job.setJarByClass(FoFdriver.class);
         job.setMapperClass(CalcMapReduce.Map.class);
         job.setReducerClass(CalcMapReduce.Reduce.class);
@@ -55,15 +65,14 @@ public class FoFdriver extends TestCase {
         FileInputFormat.setInputPaths(job,input);
         FileOutputFormat.setOutputPath(job,outpath);
 
-        outpath.getFileSystem(configuration).delete(outpath,true);
+        outpath.getFileSystem(conf).delete(outpath,true);
 
         return job.waitForCompletion(true);
     }
 
     public static void runSortJob(String input,String output) throws ClassNotFoundException,InterruptedException,IOException{
-        Configuration configuration = new Configuration();
 
-        Job job = new Job(configuration);
+        Job job = new Job(conf);
 
         job.setJarByClass(FoFdriver.class);
         job.setMapperClass(SortJob.Map.class);
@@ -86,7 +95,7 @@ public class FoFdriver extends TestCase {
         FileInputFormat.setInputPaths(job,input);
         FileOutputFormat.setOutputPath(job,outputPath);
 
-        outputPath.getFileSystem(configuration).delete(outputPath,true);
+        outputPath.getFileSystem(conf).delete(outputPath,true);
 
         job.waitForCompletion(true);
     }

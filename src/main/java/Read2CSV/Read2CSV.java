@@ -29,6 +29,7 @@ public class Read2CSV{
         conf.set("hbase.zookeeper.quorum", "127.0.0.1");
         conf.set("hbase.rootdir","hdfs://master:8020/hbase");
         conf.set("hbase.master", "hdfs://master:60000");
+		conf.set("fs.default.name","hdfs://localhost:9000");
     }
     /**
      * args[0]为表名，分隔符为$;args[1]为每个变量值，args[2]需要设定的分隔符，args[3]为生成的表名
