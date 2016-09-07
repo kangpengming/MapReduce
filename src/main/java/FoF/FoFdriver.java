@@ -23,6 +23,7 @@ import java.io.IOException;
  * 同时存在这两个人，那么A与该人都是C，D的共同好友。
  * 其中最主要的是用到了二次排序，现将进行分区，分区需要根据规则进行，这里面构造了复合key。对其进行分区（默认的是选取key值）。
  * 然后就是排序，排序会自动选取分区之后的数据，在对分区里面的数据进行分组，然后reduce去读取每个分区里面的数据。
+ * 分区与分组的区别，分区是将相关的数据分配到reduce中，而分组是将每一个分区中的相关联的数据放置在一个迭代器中。
  * */
 public class FoFdriver extends TestCase {
     static Configuration conf = new Configuration();

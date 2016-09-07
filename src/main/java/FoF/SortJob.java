@@ -36,7 +36,7 @@ public class SortJob {
         @Override
         protected void reduce(Person key, Iterable<Person> values, Context context) throws IOException, InterruptedException {
             StringBuilder sb = new StringBuilder();
-
+            context.write(new Text("-=-----------------"),null);
             int count = 0;
             for(Person potentialFriend : values){
                     if (sb.length() > 0){
