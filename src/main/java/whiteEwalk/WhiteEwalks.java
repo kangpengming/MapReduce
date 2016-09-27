@@ -12,6 +12,7 @@ import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -42,6 +43,7 @@ public class WhiteEwalks {
 
         Scan scan = new Scan();
         conf.set("tablename", tabelName);
+        //conf.set();
         Job job = new Job(conf,storeTable);
         job.setJarByClass(WhiteEwalks.class);
         job.setReducerClass(ReduceWhitel.class);
@@ -104,8 +106,8 @@ public class WhiteEwalks {
             }
 
             String urlupdate = url+"&street="+street+"&"+"where="+where;
-            String keystr = key.toString().split("\\$")[1];
-            context.write( new Text(keystr) ,new Text(urlupdate));
+            String keystr = "";
+            context.write(null,new Text(urlupdate));
 
         }
     }

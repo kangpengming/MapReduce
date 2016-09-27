@@ -22,6 +22,10 @@ import java.util.Calendar;
 /**
  * Created by kp on 16/8/27.
  */
+
+/**
+ * 将多张表读成一张表
+ * */
 public class airbnbTest {
     private static Configuration conf = null;
     static {
